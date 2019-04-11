@@ -13,7 +13,8 @@ class TodoListViewController: UITableViewController {
     
     
     
-    let itemArray = ["Find Mike", "Buy Eggs", "Destory Demogro"]  //added lec 221 9:46
+    //let itemArray = ["Find Mike", "Buy Eggs", "Destory Demogro"]  //added lec 221 9:46 removed lec 223 14:20
+    var itemArray = ["Find Mike", "Buy Eggs", "Destory Demogro"] // lec 223 14:20
     
     
     override func viewDidLoad() {
@@ -75,7 +76,38 @@ class TodoListViewController: UITableViewController {
     
     
     // MARK - Source Control
-    //lec 223 
+    //lec 223 to make a github you click source control >Committ.  to view all stored items click on the source control and click on branches.
+    
+    // MARK - Add New items
+    //lec 223 3:17
+    
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        
+        var textField = UITextField()  // this variable is a local variable that is only available to all of the code inside of this function
+        
+        let alert = UIAlertController(title: "Add New Todoey Item", message: "", preferredStyle: .alert)// lec 223 4:17
+        
+        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+            //Code what will happen once the user clicks the add item button on our UIAlert
+            print("Add item Pressed!")
+            print(textField.text)  // if not understood review lessons of scope covered earlier on
+            
+            
+            self.itemArray.append(textField.text!) //force unwraping is by usint the "!".   lec 223 14:40 ideally this item would have checking to make sure the text field had a value and wasn't blank.
+            
+            self.tableView.reloadData() //lec 223 18:14
+        }
+        
+        alert.addTextField { (alertTextField) in
+            alertTextField.placeholder = "Create New item"
+            textField = alertTextField //added lec 223 ~10- 12 min
+            //print(alertTextField.text)// lec 223 7:43  stopped around 8:21 on lec 223
+            print("now")
+        }
+        
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
+    }
     
 }
 
