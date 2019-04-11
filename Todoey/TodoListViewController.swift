@@ -16,10 +16,20 @@ class TodoListViewController: UITableViewController {
     //let itemArray = ["Find Mike", "Buy Eggs", "Destory Demogro"]  //added lec 221 9:46 removed lec 223 14:20
     var itemArray = ["Find Mike", "Buy Eggs", "Destory Demogro"] // lec 223 14:20
     
+    let defaults = UserDefaults.standard // added lec 225 1:26.  This allows for persisting small bits of local data.
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        /*lec 225 3:40 the items were saved in the key value par.  to find where the data is persisted locally (stored) we need to get the ID of the app on our hard drive.  and the ID of the sand box.  use the following line of code
+         print(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String)  tthis is place in the appdelegate at the start   note library files are natively hidden on macs to un hide use the terminal functionality and input chflags nohidden ~/Library*/
+        
+        if let items = defaults.array(forKey: "TodoListArray") as? [String] { // added lec 225 9:13
+            itemArray = items
+        }
+        
     }
     
     
@@ -29,6 +39,8 @@ class TodoListViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
 
+
+    
     
     //MARK - Tableview Datasource Methods
     
@@ -62,7 +74,7 @@ class TodoListViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         
         /*lec 222 4:30 - on the main.storyboard.  on the attribute inspector there is an accessory function this will be adjusting that.  this will add the checkmark but will not remove it
-        tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark //removed 222 6:40 */
+        tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark //removed 222 6:40   */
         
         
         //lec 222 6:40
@@ -94,6 +106,8 @@ class TodoListViewController: UITableViewController {
             
             
             self.itemArray.append(textField.text!) //force unwraping is by usint the "!".   lec 223 14:40 ideally this item would have checking to make sure the text field had a value and wasn't blank.
+            self.defaults.set(self.itemArray, forKey: "TodoListArray") //added 225 2:20
+            //self.defaults.set(setValue(self.itemArray, forKey: "TodoListArray"))
             
             self.tableView.reloadData() //lec 223 18:14
         }
