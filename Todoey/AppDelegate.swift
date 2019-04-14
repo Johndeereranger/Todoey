@@ -22,7 +22,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print("didFinishlaunchingwithoptions")
         
         
-        print(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String) // added lec 225 4:54
+        
+        /*
+         print(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String) // added lec 225 4:54  removed in lec 233 1:04*/
         return true
     }
 

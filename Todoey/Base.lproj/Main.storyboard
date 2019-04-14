@@ -22,7 +22,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ehu-3T-Seb" id="00M-pr-H2R">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -36,7 +36,7 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="SsG-UV-f7C">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
-                                <action selector="addButtonPressed:" destination="Y9x-JI-WqS" id="AaA-D6-UHD"/>
+                                <action selector="addButtonPressed:" destination="Y9x-JI-WqS" id="tmq-ns-vCt"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
