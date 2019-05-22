@@ -7,42 +7,23 @@
 //
 
 import UIKit
+import CoreData // lec 237
 
 class TodoListViewController: UITableViewController {
-    // setting up the UITableView controller.  Drag the 'Table View Controller'  then need to change the storyboard entry point to point to the UITableView Controller.   We added a Navigation controller to the Main.Storyboard.  when on the main story board click Editor then click "Embed In" then Navigation controller.   to label the Navigation controller click on the Attributes inspector    <  all of this is found in lec 221 up to 9:46
-    
-    //let itemArray = ["Find Mike", "Buy Eggs", "Destory Demogro"]  //added lec 221 9:46 removed lec 223 14:20
-    //var itemArray = ["Find Mike", "Buy Eggs", "Destory Demogro"] // lec 223 14:20   removed lec 229 7:47
+
     var itemArray = [Item]()  // this changes from an array of strings to an array of item objects.
     
     //let defaults = UserDefaults.standard // added lec 225 1:26.  This allows for persisting small bits of local data. removed 233 5:02
     
             let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
  
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext // lec 237
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        /*lec 225 3:40 the items were saved in the key value par.  to find where the data is persisted locally (stored) we need to get the ID of the app on our hard drive.  and the ID of the sand box.  use the following line of code
-         print(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String)  tthis is place in the appdelegate at the start   note library files are natively hidden on macs to un hide use the terminal functionality and input chflags nohidden ~/Library*/
         
-        /*lec 233 1:34  hint in the section for document directory just place a . in the area and then a list of potential options will show up.  Moved to class sectin at lec 233 7:12
-        let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
-        print (dataFilePath)  */
         
-        /*added lec 229 8:35  this was laid out in detail in the quizzler app.  removed 234 3:45
-        let newItem = Item()
-        newItem.title = "Find Mike"
-        itemArray.append(newItem)
-        
-        let newItem2 = Item()
-        newItem2.title = "Buy eggse"
-        itemArray.append(newItem2)
-        
-        let newItem3 = Item()
-        newItem3.title = "find me"
-        itemArray.append(newItem3)  */
-
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         loadItems()
         
         
@@ -103,42 +84,24 @@ class TodoListViewController: UITableViewController {
 
     //MARK - TableView Delegate Methods
     
-    //lec 222 1:07
+    //lec 241
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print(indexPath.row) // this will print out what row of the index path is selected
         print(itemArray[indexPath.row]) // this will print out what is actually the row described is selected.
-        //lec 222 2:49 for the above lines
         
-        //lec 222 3:05 - this make the table viewthat is selected no longer highlighted when it is selected
-        tableView.deselectRow(at: indexPath, animated: true)
-        
-        
-        /*lec 222 4:30 - on the main.storyboard.  on the attribute inspector there is an accessory function this will be adjusting that.  this will add the checkmark but will not remove it
-        tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark //removed 222 6:40   */
+        /*
+        //lec 242
+        context.delete(itemArray[indexPath.row])  // must be called first the order of operations matters
+        itemArray.remove(at: indexPath.row)
+        */
         
         
-        /*lec 229 10:19  below is the long way of writing this out
-        if itemArray[indexPath.row].done == false {
-            itemArray[indexPath.row].done = true
-        } else {
-            itemArray[indexPath.row].done = false }  removed on lec 229 15:55 and replaced by
-        itemArray[indexPath.row].done = !itemArray[indexPath.row].done */
         
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
         saveItems()
-        
-       // tableView.reloadData() //lec 229 13:15  this forces the table view to reload the data.  removed lec 233 12:21 with addition of saveItems fucntion no longer needed
-        
-        
-        /*added lec 222 6:40   removed lec 229 11:53  SECTION A
-        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-        } else {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        }
-     */
+         tableView.deselectRow(at: indexPath, animated: true)
     }
         
     // MARK - Source Control
@@ -155,28 +118,18 @@ class TodoListViewController: UITableViewController {
         let alert = UIAlertController(title: "Add New Todoey Item", message: "", preferredStyle: .alert)// lec 223 4:17
         
          let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
-            //Code what will happen once the user clicks the add item button on our UIAlert
+            
+            //lec 237 ~2:00
+            //let context =(UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+            let newItem = Item(context: self.context)
+            
+
             print("Add item Pressed!")
-                    print(textField.text)  // if not understood review lessons of scope covered earlier on
-            let newItem = Item() // created lec 229 9:34
             newItem.title = textField.text!
+            newItem.done = false
             self.itemArray.append(newItem)
             self.saveItems()
         }
-            //self.itemArray.append(textField.text!) //force unwraping is by usint the "!".   lec 223 14:40 ideally this item would have checking to make sure the text field had a value and wasn't blank.
-            //self.defaults.set(self.itemArray, forKey: "TodoListArray") //added 225 2:20  removed lec 233 5:04 replaced by Section C
-            //self.defaults.set(setValue(self.itemArray, forKey: "TodoListArray"))
-            
-            /*section C added lec 233 5:04  removed lec 233 11:57 created function saveItems below
-            let encoder = PropertyListEncoder()
-            do{
-            let data = try encoder.encode(self.itemArray)
-                try data.write(to: self.dataFilePath!)
-            } catch {
-                print("Error encodeing item array, \(error)")}
-            
-            self.tableView.reloadData() //lec 223 18:14
-        } */
         
         alert.addTextField { (alertTextField) in
             alertTextField.placeholder = "Create New item"
@@ -189,27 +142,74 @@ class TodoListViewController: UITableViewController {
     
     
     }
-    func saveItems() {  // lec 233 11:57
-        let encoder = PropertyListEncoder()
+    func saveItems() {// lec 237 4:30
+       
         do{
-            let data = try encoder.encode(itemArray)
-            try data.write(to: dataFilePath!)
+           try context.save()
         } catch {
-            print("Error encodeing item array, \(error)")
+            print("Error saving context, \(error)")
         }
         
         self.tableView.reloadData()
     }
     
-    func loadItems() {  //lec 234 1:55
-        if let data = try? Data(contentsOf: dataFilePath!){
-            let decoder = PropertyListDecoder()
-            do {
-            itemArray = try decoder.decode([Item].self, from: data)
+//    func loadItems() {  //lec 240 1:01  created new in lec 243
+//        let request : NSFetchRequest<Item> = Item.fetchRequest()
+//        do{
+//        itemArray = try context.fetch(request)
+//        } catch {
+//            print("Error fetching data from context \(error)")
+//        }
+//    }
+    //lec 243 19:45
+    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()){
+      
+        do{
+            itemArray = try context.fetch(request)
         } catch {
-            print("Error decoding item array, \(error)")
+            print("Error fetching data from context \(error)")
         }
     }
+    
 }
-}
+
+// MARK: - Search Bar Methods
+
+// lec 243 6:00
+extension TodoListViewController: UISearchBarDelegate{
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        
+        //lec 243 10:43 shorted at 19:45
+        /*let predicate = NSPredicate(format: "title CONTAINS %@", searchBar.text!)
+        request.predicate = predicate
+        let sortDescriptor = NSSortDescriptor(key: "title", ascending: true)
+        request.sortDescriptors = [sortDescriptor]
+        do{itemArray = try context.fetch(request) } catch {
+            print("Error fetching data from context \(error)")}
+        tableView.reloadData() */
+        
+        //shortened starting lec 243 19:45
+        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+       
+        loadItems(with: request)
+    }
+    
+    //lec 243
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0{
+            loadItems()
+            //lec 243 3:09
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+            
+        }
+    }
+    
+    
+        
+    }
+    
 

@@ -4,9 +4,10 @@
 //
 //  Created by Amie Smith on 4/7/19.
 //  Copyright © 2019 Amie Smith. All rights reserved.
-//
+//  printed in the middle of lec 236  this was trimmed significantly after that
 
 import UIKit
+import CoreData // added 236 4:03
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,46 +16,50 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        
-        //  lec 224  1:07 this gets called when the app first gets loaded up.  It doesn't matter if the App is going to crash this is the frist thing taht is called
-        
+    
         print("didFinishlaunchingwithoptions")
-        
-        
-        
-        /*
-         print(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String) // added lec 225 4:54  removed in lec 233 1:04*/
+
         return true
     }
-
-    func applicationWillResignActive(_ application: UIApplication) {
-        // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-        // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
-    }
-
-    func applicationDidEnterBackground(_ application: UIApplication) {
-        // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-        // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-        
-        print("applicationdidenterbackground") // lec 224 2:42
-    }
-    
-
-    func applicationWillEnterForeground(_ application: UIApplication) {
-        // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
-    }
-
-    func applicationDidBecomeActive(_ application: UIApplication) {
-        // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    }
-
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-        
-        print("application did Terminate")  //lec 224 2:42
+        // Saves changes in the application's managed object context before the application terminates.
+        self.saveContext()
+     } //remvoed lec236 3:5
+    
+    // MARK: - Core Data stack
+    // lec 236 shows how to copy and set this up.
+    
+    lazy var persistentContainer: NSPersistentContainer = {
+ 
+        let container = NSPersistentContainer(name: "DataModel")
+        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+            if let error = error as NSError? {
+
+                fatalError("Unresolved error \(error), \(error.userInfo)")
+            }
+        })
+        return container
+    }()
+    
+    // MARK: - Core Data Saving support
+    
+    func saveContext () {
+        let context = persistentContainer.viewContext
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+
+                let nserror = error as NSError
+                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+            }
+        }
     }
-
-
+    
 }
+
+
+
+
 

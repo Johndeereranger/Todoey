@@ -5,6 +5,10 @@
 //  Created by Amie Smith on 4/11/19.
 //  Copyright © 2019 Amie Smith. All rights reserved.
 // created lec 229 5:50  creating a custom class
+// replaced by core data in lec 236 7:49
+
+
+/*
 
 import Foundation
 
@@ -15,4 +19,4 @@ class Item: Codable{
     // added lec 229 7:36
     var title : String = ""
     var done : Bool = false
-}
+} */
